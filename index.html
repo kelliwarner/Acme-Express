@@ -1,0 +1,64 @@
+<html>
+  <head>
+    <link rel="stylesheet" type="text/css" href="/css/styles.css" />
+    <script
+      src="https://unpkg.com/react@16/umd/react.development.js"
+      crossorigin
+    ></script>
+    <script
+      src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"
+      crossorigin
+    ></script>
+    <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.19.2/axios.js"></script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="text/babel">
+      const { useEffect, useState } = React;
+      const App = () => {
+        const [products, setProducts] = useState([]);
+        useEffect(() => {
+          axios.get('/api/products').then(response => {
+            setProducts(response.data);
+          });
+        }, []);
+        const [companies, setCompanies] = useState([]);
+        useEffect(() => {
+          axios.get('/api/companies').then(response => {
+            setCompanies(response.data);
+          });
+        }, []);
+
+        return (
+          <div>
+            <h1>Acme Express Products</h1>
+
+            <div className="card-container">
+              {products.map(product => (
+                <div className="card">
+                  <h2> {product.name.toUpperCase()} </h2>
+                  <p> {product.description} </p>
+                  <p> ${product.suggestedPrice}.00 </p>
+                </div>
+              ))}
+            </div>
+            <h1> Acme Express Companies </h1>
+            <div className="card-container">
+              {companies.map(company => (
+                <div className="card">
+                  <h2>
+                    {company.name} of {company.state}
+                  </h2>
+                  <p>{company.catchPhrase}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        );
+      };
+
+      ReactDOM.render(<App />, document.querySelector('#root'));
+    </script>
+  </body>
+</html>
